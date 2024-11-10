@@ -11,7 +11,7 @@ Vagrant.configure("2") do |config|
     vmtest1.vm.boot_timeout = 1800  # Aumentar el tiempo de espera a 30 minutos
 
     #---------Comparto la carpeta del host donde estoy parado contra la vm
-    vmHost1.vm.synced_folder 'compartido_Host1/', '/home/vagrant/compartido', 
+    vmtest1.vm.synced_folder 'compartido_test1/', '/home/vagrant/compartido', 
     owner: 'vagrant', group: 'vagrant'
 
     #-----------Inserción de clave SSH
@@ -30,6 +30,12 @@ Vagrant.configure("2") do |config|
       vb.cpus = 1
       vb.linked_clone = true
     end
+
+    # Provisión para la máquina Ubuntu
+    vmtest1.vm.provision "shell", inline: <<-SHELL
+      sudo apt-get update -y
+      sudo apt-get install -y lvm2 ansible docker.io tree git
+    SHELL
   end
 
   #------------Definir la segunda máquina virtual (Fedora) como 'produccion'
@@ -40,7 +46,7 @@ Vagrant.configure("2") do |config|
     vmprod2.vm.boot_timeout = 1800  # Aumentar el tiempo de espera a 30 minutos
 
     #--------Comparto la carpeta del host donde estoy parado contra la vm
-    vmHost2.vm.synced_folder 'compartido_Host2/', '/home/vagrant/compartido'
+    vmprod2.vm.synced_folder 'compartido_prod2/', '/home/vagrant/compartido'
 
     #-------------Inserción de clave SSH
     vmprod2.ssh.insert_key = true
@@ -58,7 +64,12 @@ Vagrant.configure("2") do |config|
       vb.cpus = 1
       vb.linked_clone = true
     end
+
+    # Provisión para la máquina Fedora
+    vmprod2.vm.provision "shell", inline: <<-SHELL
+      sudo dnf update -y
+      sudo dnf install -y lvm2 ansible docker tree git
+    SHELL
   end
+
 end
-
-
