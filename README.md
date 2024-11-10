@@ -1,3 +1,3 @@
-# UTNFRA_SO_TP2_casado
+# Grupo I_Love_Linux
 Valentin D'Adamo            117657
 Santino Casado              117625
