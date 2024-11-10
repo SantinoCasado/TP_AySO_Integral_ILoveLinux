@@ -1,0 +1,57 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+
+  #-----------------Definir la primera máquina virtual (Ubuntu) como 'testeo'
+  config.vm.define "testeo" do |vmtest1|
+    vmtest1.vm.box = "ubuntu/jammy64"
+    vmtest1.vm.hostname = "testeo"
+    vmtest1.vm.network "private_network", ip: "192.168.56.10"
+    vmtest1.vm.boot_timeout = 1800  # Aumentar el tiempo de espera a 30 minutos
+
+    #-----------Inserción de clave SSH
+    vmtest1.ssh.insert_key = true
+
+    #---------Discos adicionales
+    vmtest1.vm.disk :disk, size: "5GB", name: "DISK1"
+    vmtest1.vm.disk :disk, size: "3GB", name: "DISK2"
+    vmtest1.vm.disk :disk, size: "2GB", name: "DISK3"
+    vmtest1.vm.disk :disk, size: "1GB", name: "DISK4_EXTRA"
+
+    #----------------Configuración del proveedor VirtualBox
+    vmtest1.vm.provider "virtualbox" do |vb|
+      vb.memory = "1024"
+      vb.name = "testeo"
+      vb.cpus = 1
+      vb.linked_clone = true
+    end
+  end
+
+  #------------Definir la segunda máquina virtual (Fedora) como 'produccion'
+  config.vm.define "produccion" do |vmprod2|
+    vmprod2.vm.box = "generic/fedora36"
+    vmprod2.vm.hostname = "produccion"
+    vmprod2.vm.network "private_network", ip: "192.168.56.11"
+    vmprod2.vm.boot_timeout = 1800  # Aumentar el tiempo de espera a 30 minutos
+
+    #-------------Inserción de clave SSH
+    vmprod2.ssh.insert_key = true
+
+    #------------Discos adicionales
+    vmprod2.vm.disk :disk, size: "5GB", name: "DISK1"
+    vmprod2.vm.disk :disk, size: "3GB", name: "DISK2"
+    vmprod2.vm.disk :disk, size: "2GB", name: "DISK3"
+    vmprod2.vm.disk :disk, size: "1GB", name: "DISK4_EXTRA"
+
+    #---------Configuración del proveedor VirtualBox
+    vmprod2.vm.provider "virtualbox" do |vb|
+      vb.memory = "1024"
+      vb.name = "produccion"
+      vb.cpus = 1
+      vb.linked_clone = true
+    end
+  end
+end
+
+
