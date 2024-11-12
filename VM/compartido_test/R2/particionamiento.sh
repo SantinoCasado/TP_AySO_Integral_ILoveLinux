@@ -51,7 +51,7 @@ sudo vgcreate vg_datos /dev/sdc1
 sudo vgcreate vg_temp /dev/sdd1
 
 #======== Creo y formateo el volumen lógico para Docker =====
-udo lvcreate -L +10M vg_datos -n lv_docker
+sudo lvcreate -L +10M vg_datos -n lv_docker
 
 sudo mkfs.ext4 /dev/mapper/vg_datos-lv_docker
 
