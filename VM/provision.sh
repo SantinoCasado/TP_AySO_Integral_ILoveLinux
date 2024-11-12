@@ -12,14 +12,12 @@ elif [ -f /etc/fedora-release ]; then
 fi
 
 # Configuración de SSH sin contraseña
-mkdir -p /home/vagrant/.ssh
-chmod 700 /home/vagrant/.ssh
-ssh-keygen -t rsa -b 4096 -N "" -f /home/vagrant/.ssh/id_rsa
-cat /home/vagrant/.ssh/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys
-chmod 600 /home/vagrant/.ssh/authorized_keys
+mkdir -p $HOME/.ssh
+ssh-keygen -t ed25519 -N "" -f $HOME/.ssh/id_ed25519
+cat $HOME/.ssh/id_ed25519.pub >> /home/vagrant/.ssh/authorized_keys
 
 # Configurar sudo sin contraseña
-echo 'vagrant ALL=(ALL) NOPASSWD: ALL' | sudo tee -a /etc/sudoers > /dev/null
+echo "ALL ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/nopasswd_sudo > /dev/null
 
 # Agregar referencias a /etc/hosts para la resolución de nombres
 echo "192.168.56.10 test" | sudo tee -a /etc/hosts > /dev/null

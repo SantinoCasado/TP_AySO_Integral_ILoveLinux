@@ -3,7 +3,7 @@
 
 Vagrant.configure("2") do |config|
 
-  # Definir la primera máquina virtual (Ubuntu) como 'testing'
+  # Definir la primera máquina virtual (Ubuntu) como 'test'
   config.vm.define "test" do |vmtest|
     vmtest.vm.box = "ubuntu/jammy64"
     vmtest.vm.hostname = "test"
@@ -32,7 +32,7 @@ Vagrant.configure("2") do |config|
     vmtest.vm.provision "shell", path: "provision.sh"
   end
 
-  # Definir la segunda máquina virtual (Fedora) como 'production'
+  # Definir la segunda máquina virtual (Fedora) como 'prod'
   config.vm.define "prod" do |vmprod|
     vmprod.vm.box = "generic/fedora36"
     vmprod.vm.hostname = "prod"
