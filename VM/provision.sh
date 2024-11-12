@@ -22,5 +22,5 @@ chmod 600 /home/vagrant/.ssh/authorized_keys
 echo 'vagrant ALL=(ALL) NOPASSWD: ALL' | sudo tee -a /etc/sudoers > /dev/null
 
 # Agregar referencias a /etc/hosts para la resolución de nombres
-echo "192.168.56.1 test" | sudo tee -a /etc/hosts > /dev/null
-echo "192.168.56.2 prod" | sudo tee -a /etc/hosts > /dev/null
+echo "192.168.56.10 test" | sudo tee -a /etc/hosts > /dev/null
+echo "192.168.56.11 prod" | sudo tee -a /etc/hosts > /dev/null
