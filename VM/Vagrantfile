@@ -3,73 +3,62 @@
 
 Vagrant.configure("2") do |config|
 
-  #-----------------Definir la primera máquina virtual (Ubuntu) como 'testeo'
-  config.vm.define "testeo" do |vmtest1|
-    vmtest1.vm.box = "ubuntu/jammy64"
-    vmtest1.vm.hostname = "testeo"
-    vmtest1.vm.network "private_network", ip: "192.168.56.10"
-    vmtest1.vm.boot_timeout = 1800  # Aumentar el tiempo de espera a 30 minutos
+  # Definir la primera máquina virtual (Ubuntu) como 'test'
+  config.vm.define "test" do |vmtest|
+    vmtest.vm.box = "ubuntu/jammy64"
+    vmtest.vm.hostname = "test"
+    vmtest.vm.network "private_network", type: "static", ip: "192.168.56.10"
+    vmtest.vm.boot_timeout = 1800  # Aumentar el tiempo de espera a 30 minutos
 
-    #---------Comparto la carpeta del host donde estoy parado contra la vm
-    vmtest1.vm.synced_folder 'compartido_test1/', '/home/vagrant/compartido', 
+    # Discos adicionales
+    vmtest.vm.disk :disk, size: "5GB", name: "DISK1"
+    vmtest.vm.disk :disk, size: "3GB", name: "DISK2"
+    vmtest.vm.disk :disk, size: "2GB", name: "DISK3"
+    vmtest.vm.disk :disk, size: "1GB", name: "DISK4_EXTRA"
+
+    # Comparto la carpeta del host donde estoy parado contra la VM
+    vmtest.vm.synced_folder 'compartido_test/', '/home/vagrant/compartido',
     owner: 'vagrant', group: 'vagrant'
 
-    #-----------Inserción de clave SSH
-    vmtest1.ssh.insert_key = true
-
-    #---------Discos adicionales
-    vmtest1.vm.disk :disk, size: "5GB", name: "DISK1"
-    vmtest1.vm.disk :disk, size: "3GB", name: "DISK2"
-    vmtest1.vm.disk :disk, size: "2GB", name: "DISK3"
-    vmtest1.vm.disk :disk, size: "1GB", name: "DISK4_EXTRA"
-
-    #----------------Configuración del proveedor VirtualBox
-    vmtest1.vm.provider "virtualbox" do |vb|
+    # Configuración del proveedor VirtualBox
+    vmtest.vm.provider "virtualbox" do |vb|
       vb.memory = "1024"
-      vb.name = "testeo"
+      vb.name = "test"
       vb.cpus = 1
       vb.linked_clone = true
     end
 
     # Provisión para la máquina Ubuntu
-    vmtest1.vm.provision "shell", inline: <<-SHELL
-      sudo apt-get update -y
-      sudo apt-get install -y lvm2 ansible docker.io tree git
-    SHELL
+    vmtest.vm.provision "shell", path: "provision.sh"
   end
 
-  #------------Definir la segunda máquina virtual (Fedora) como 'produccion'
-  config.vm.define "produccion" do |vmprod2|
-    vmprod2.vm.box = "generic/fedora36"
-    vmprod2.vm.hostname = "produccion"
-    vmprod2.vm.network "private_network", ip: "192.168.56.11"
-    vmprod2.vm.boot_timeout = 1800  # Aumentar el tiempo de espera a 30 minutos
+  # Definir la segunda máquina virtual (Fedora) como 'prod'
+  config.vm.define "prod" do |vmprod|
+    vmprod.vm.box = "generic/fedora36"
+    vmprod.vm.hostname = "prod"
+    vmprod.vm.network "private_network", type: "static", ip: "192.168.56.11"
+    vmprod.vm.boot_timeout = 1800  # Aumentar el tiempo de espera a 30 minutos
 
-    #--------Comparto la carpeta del host donde estoy parado contra la vm
-    vmprod2.vm.synced_folder 'compartido_prod2/', '/home/vagrant/compartido'
+    # Discos adicionales
+    vmprod.vm.disk :disk, size: "5GB", name: "DISK1"
+    vmprod.vm.disk :disk, size: "3GB", name: "DISK2"
+    vmprod.vm.disk :disk, size: "2GB", name: "DISK3"
+    vmprod.vm.disk :disk, size: "1GB", name: "DISK4_EXTRA"
 
-    #-------------Inserción de clave SSH
-    vmprod2.ssh.insert_key = true
+    # Comparto la carpeta del host donde estoy parado contra la VM
+    vmprod.vm.synced_folder 'compartido_prod/', '/home/vagrant/compartido',
+    owner: 'vagrant', group: 'vagrant'
 
-    #------------Discos adicionales
-    vmprod2.vm.disk :disk, size: "5GB", name: "DISK1"
-    vmprod2.vm.disk :disk, size: "3GB", name: "DISK2"
-    vmprod2.vm.disk :disk, size: "2GB", name: "DISK3"
-    vmprod2.vm.disk :disk, size: "1GB", name: "DISK4_EXTRA"
-
-    #---------Configuración del proveedor VirtualBox
-    vmprod2.vm.provider "virtualbox" do |vb|
+    # Configuración del proveedor VirtualBox
+    vmprod.vm.provider "virtualbox" do |vb|
       vb.memory = "1024"
-      vb.name = "produccion"
+      vb.name = "prod"
       vb.cpus = 1
       vb.linked_clone = true
     end
 
     # Provisión para la máquina Fedora
-    vmprod2.vm.provision "shell", inline: <<-SHELL
-      sudo dnf update -y
-      sudo dnf install -y lvm2 ansible docker tree git
-    SHELL
+    vmprod.vm.provision "shell", path: "provision.sh"
   end
 
 end
