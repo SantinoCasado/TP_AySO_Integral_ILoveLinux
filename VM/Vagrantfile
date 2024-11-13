@@ -2,7 +2,7 @@
 # vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
-
+  config.vagrant.plugins = "vagrant-disksize"
   # Definir la primera máquina virtual (Ubuntu) como 'test'
   config.vm.define "test" do |vmtest|
     vmtest.vm.box = "ubuntu/jammy64"
